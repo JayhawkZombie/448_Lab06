@@ -29,11 +29,11 @@ private:
 void Matrix::assignValuesToMatrix()
 {
 	//loops to allocate the memory for the matrix
-//	matrix = new double*[rows];
-	//	for (int j = 0; j < cols; j++)
-		//{
-			//matrix[j] = new double[cols];
-		//}
+	matrix = new double*[rows];
+		for (int j = 0; j < cols; j++)
+		{
+			matrix[j] = new double[cols];
+		}
 }
 
 void Matrix::print()
@@ -81,13 +81,14 @@ void Matrix::readFile()
 	for (int i = 0; i < lines.size(); i++)
 	{
 		line = lines[i];
-		std::cout << "Lines[" << i << "]: " << line << std::endl;
+		part = "";
+		std::cout << "Lines[" << i << "]:" << line << std::endl;
 		for (int j = 0; j < lines[i].length(); j++)
 		{
-			if (line[j] != ' ')
+			if (line[j] != ' ' && line[j] != '\0' && line[j] != '\n')
 			{
 				part += line[j]; //appending the 'number' to the string to be converted later
-				std::cout << "PART[" << j << "]: " << part;
+				std::cout << "PART[" << j << "]:" << part << ",";
 			}
 			else
 			{
@@ -96,7 +97,12 @@ void Matrix::readFile()
 				part = "";
 			}
 		}
-		std::cout << "Numbers" << i << ": " << numbers[i] << std::endl;
+	}
+	std::cout << std::endl;
+	for (int i = 0; i < numbers.size(); i++)
+	{
+		std::cout << "Numbers:";
+		std::cout << numbers[i] << ",";
 	}
 	
 }
