@@ -115,20 +115,23 @@ def convertStr(s):
 		print "Oops!  That was no valid number.  Try again..."
 	return ret
 def selectMatrix(matricies):
-	print "\nPlease select a matrix"
-	i = matricies.listEntries()
-	prompt1 = raw_input(":")
-	prompt1 = convertStr(prompt1)
-	if prompt1 > i or prompt1 < 1:
-		print "invalid input"
-	else:
-		new_matrix = matricies.head
-		x=1
-		while x<(prompt1):
-			new_matrix = new_matrix.next
-			x+=1
-		if new_matrix is not None:
-			print "You selected: " + str(new_matrix.filename)
+	exit_flag = 1
+	while exit_flag is not 0:
+		print "\nPlease select a matrix"
+		i = matricies.listEntries()
+		prompt1 = raw_input(":")
+		prompt1 = convertStr(prompt1)
+		if prompt1 > i or prompt1 < 1:
+			print "invalid input"
+		else:
+			new_matrix = matricies.head
+			x=1
+			while x<(prompt1):
+				new_matrix = new_matrix.next
+				x+=1
+			if new_matrix is not None:
+				print "You selected: " + str(new_matrix.filename)
+			exit_flag = 0
 	return new_matrix
 
 #Main Runtime
@@ -150,23 +153,41 @@ def main():
 			matricies.show()
 		elif prompt == 3:
 			#new_matrix = matricies.head
-			new_matrix = selectMatrix(matricies)
+			matrix1 = selectMatrix(matricies)
+			matrix2 = selectMatrix(matricies)
+			if (matrix1.m == matrix2.n):
+				#Create new matrix shell filled with zeroes
+				matrix = [[0 for i in range(matrix2.m)] for j in range(matrix1.n)]
+				#Loop through 
+				for i in range(0, matrix1.n):	
+					for k in range(0, matrix2.m):
+						mult = 0
+						for j in range(0, matrix1.m):
+							mult += float(matrix1.array[i][j]) * float(matrix2.array[j][k])
+						matrix[i][k] = mult
+
+				#print new matrix
+				for i in range(0, matrix1.n):
+					print int(matrix[i])
+			else:
+				print "Invalid Selection - please try agian"
 		elif prompt == 4:
 			#new_matrix = matricies.head
 			matrix1 = selectMatrix(matricies)
 			matrix2 = selectMatrix(matricies)
-			n = matrix1.n
-			m = matrix1.m
-			#print "n=" + str(n) + ", m=" + str(m)
-			matrix = [[0 for i in range(n)] for j in range(m)]
+			if (matrix1.n == matrix2.n) and (matrix1.m == matrix2.m):
+				#print "n=" + str(n) + ", m=" + str(m)
+				matrix = [[0 for i in range(matrix1.n)] for j in range(matrix1.m)]
 
-			for i in range(0, n):
-				for j in range(0, m):
-					matrix[i][j] = float(matrix1.array[i][j]) + float(matrix2.array[i][j])
+				for i in range(0, matrix1.n):
+					for j in range(0, matrix1.m):
+						matrix[i][j] = float(matrix1.array[i][j]) + float(matrix2.array[i][j])
 
-			print "Addition matrix is: "
-			for i in range(0, n):
-				print matrix[i]
+				print "Addition matrix is: "
+				for i in range(0, matrix1.n):
+					print int(matrix[i])
+			else:
+				print "Invalid Selection - please try agian"
 		elif prompt == 5:
 			#new_matrix = matricies.head
 			trans_matrix = selectMatrix(matricies)
@@ -185,7 +206,6 @@ def main():
 			print "Transposed Matrix:"
 			for i in range(0, m):
 				print matrix[i]
-
 		else:
 			exit_flag = 0
 			print "Program Ending..."
