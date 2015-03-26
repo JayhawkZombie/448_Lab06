@@ -1,6 +1,20 @@
 // MatrixProject.cpp : Defines the entry point for the console application.
 //
 
+/** I am using std::cerr for debugging code because it skips the standout output buffer and prints
+    the string directly to the screen
+    The parser isn't going to catch all error, but it should catch some of them - I'll make a more robust validator later
+    The Matrix class has a dynamically allocated one-dimensional array to store the elements
+    They are stored like this:
+    [X X X X
+     Y Y Y Y 
+     Z Z Z Z]
+    becomes
+    [X X X X Y Y Y Y Z Z Z Z]
+    To access a certain element, we go to the element (i * rows + j) where (i,j) is the MATRIX coordinate
+    that we want to access
+*/
+
 #include "stdafx.h"
 
 #include <string>
@@ -85,14 +99,19 @@ void Matrix::readFile()
 	}
 
 	/**else the file was able to be opened*/
+	/** This reads the file one line at a time */
+	/** fileLine is one line from the file - it should look something like this "1,3,5,7,9" without the quotes */
 	std::string fileLine = "";
 	while (std::getline(in, fileLine))
 	{
+		/** Pushing the lines into a vector so that I can parse them later */
 		lines.reserve(lines.size() + 1);
 		lines.push_back(fileLine);
 	}
+	//calculate the number of rows in the file
 	rows = lines.size();
-	int colu = 0;
+	//oops, unused variable
+//	int colu = 0;
 
 	std::string part = "";
 	std::string line = "";
@@ -108,12 +127,18 @@ void Matrix::readFile()
 			//std::cout << "LINE[" << j << "]:" << line[j] << std::endl;
 			if (line[j] != ',' && line[j] != ' ' && line[j] != '\0' && line[j] != '\n')
 			{
+				//if it passes that test, then the character must be a number
+				//so we'll put that into a string and convert that string to a double
 				//std::cout << "PART+=" << line[j] << std::endl;
 				part += line[j];
 				if (j == line.length() - 1)
 				{
+					//this is a bug fix - the last value in the rows was not getting assigned
+					//to the matrix, so this is a workaround
 					//std::cout << "PART:" << part << std::endl;
 					numbers.reserve(numbers.size() + 1);
+					//oops, need to change std::stoi to std::stod
+					//will change later and test functionality
 					numbers.push_back(static_cast<double>(std::stoi(part)));
 					part = "";
 				}
@@ -139,8 +164,6 @@ void Matrix::assignValues()
 	matrix = new double[rows*cols];
 	
 	std::cerr << "Allocated memory" << std::endl;
-	//Insert the values row by row
-	
 	int k = 0;
 	for (int i = 0; i < rows*cols; i++)
 	{
