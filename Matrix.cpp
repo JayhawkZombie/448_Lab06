@@ -61,13 +61,13 @@ void Matrix::add(const Matrix& matrix1, const Matrix& matrix2)
 	if (matrix1.rows == matrix2.rows && matrix1.cols == matrix2.cols)
 	{
 		//We can add the matrices because they are the same size
-	}
-	this->matrix = new double[matrix1.rows*matrix1.cols];
-	this->rows = matrix1.rows;
-	this->cols = matrix1.cols;
-	for (int i = 0; i < rows * cols; i++)
-	{
-		matrix[i] = matrix1.matrix[i] + matrix2.matrix[i];
+		this->matrix = new double[matrix1.rows*matrix1.cols];
+		this->rows = matrix1.rows;
+		this->cols = matrix1.cols;
+		for (int i = 0; i < rows * cols; i++)
+		{
+			matrix[i] = matrix1.matrix[i] + matrix2.matrix[i];
+		}
 	}
 }
 
