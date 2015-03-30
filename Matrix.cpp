@@ -21,6 +21,7 @@ public:
 	void readFile();
 	void print();
 	void add(const Matrix& matrix1, const Matrix& matrix2);
+	void multiplyWith(const Matrix& matrix2);
 	void operator = (const Matrix& matrix);
 	void setSize(int row, int col);
 	void transpose();
@@ -30,6 +31,36 @@ private:
 	void assignValues();
 	bool square;
 };
+
+void Matrix::multiplyWith(const Matrix& matrix2)
+{
+	if (rows == matrix2.cols && cols == matrix2.rows)
+	{
+		double* _new = new double[rows*rows];
+		int sum = 0;
+		int k = 0;
+		int t = 0;
+		
+		for (int i = 0; i < this->rows; i++)
+		{
+			sum = 0;
+			for (int j = 0; j < matrix2.cols; j++)
+			{
+				sum = 0;
+				for (int k = 0; k < matrix2.rows; k++)
+				{
+					sum += matrix[i*this->cols + k] * matrix2.matrix[k*matrix2.cols + j];
+					_new[i*rows + j] = sum;
+				}
+			}
+		}
+
+		double* temp = matrix;
+		matrix = _new;
+		delete[] temp;
+	}
+}
+
 
 void Matrix::transpose()
 {
@@ -43,7 +74,6 @@ void Matrix::transpose()
 	{
 		for (int j = 0; j < rows; j++)
 		{
-			std::cout << "_new[" << k << "]: matrix[" << j*cols + i << "] = " << matrix[j*cols + i] << std::endl;
 			_new[k] = matrix[j*cols + i];
 			k++;
 		}
@@ -76,7 +106,6 @@ void Matrix::operator=(const Matrix& copy)
 	this->matrix = new double[copy.rows * copy.cols];
 	for (int i = 0; i < copy.rows * copy.cols; i++)
 	{
-		std::cerr << "Copying value: " << copy.matrix[i] << std::endl;
 		this->matrix[i] = copy.matrix[i];
 	}
 	this->rows = copy.rows;
@@ -127,18 +156,17 @@ void Matrix::readFile()
 	{
 		line = lines[i];
 		part = "";
-		//std::cout << "LINES[" << i << "]:" << line << std::endl;
 
 		for (int j = 0; j < line.length(); j++)
 		{
-			//std::cout << "LINE[" << j << "]:" << line[j] << std::endl;
+
 			if (line[j] != ',' && line[j] != ' ' && line[j] != '\0' && line[j] != '\n')
 			{
-				//std::cout << "PART+=" << line[j] << std::endl;
+
 				part += line[j];
 				if (j == line.length() - 1)
 				{
-					//std::cout << "PART:" << part << std::endl;
+
 					numbers.reserve(numbers.size() + 1);
 					numbers.push_back(static_cast<double>(std::stoi(part)));
 					part = "";
@@ -146,7 +174,7 @@ void Matrix::readFile()
 			}
 			else
 			{
-				//std::cout << "PART:" << part << std::endl;
+
 				numbers.reserve(numbers.size() + 1);
 				numbers.push_back(static_cast<double>(std::stoi(part)));
 				part = "";
@@ -172,16 +200,6 @@ void Matrix::assignValues()
 	{
 		matrix[i] = numbers[k++];
 	}
-	/**
-	for (int i = 0; i < rows; i++)
-	{
-		for (int j = 0; j < cols; j++)
-		{
-			std::cout << "Matrix[" << i*(cols - 1) + j << "] = " << numbers[k] << std::endl;
-			matrix[(i * (cols - 1)) + j] = numbers[k];
-			k++;
-		}
-	} */
 
 	std::cerr << "Finished allocating memory" << std::endl;
 }
@@ -197,7 +215,6 @@ void Matrix::print()
 			std::cout << std::endl;
 	} */
 
-	std::cerr << "ACCESSING ELEMENTS(i,j)" << std::endl;
 	for (int i = 0; i < rows; i++)
 	{
 		for (int j = 0; j < cols; j++)
@@ -223,6 +240,8 @@ int main()
 	matrix3.add(matrix1, matrix2);
 	matrix3.print();
 	matrix3.transpose();
+	matrix3.print();
+	matrix3.multiplyWith(matrix2);
 	matrix3.print();
 	//std::cout << matrix1.rows << " by " << matrix1.cols << std::endl;
 	return 0;
