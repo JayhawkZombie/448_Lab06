@@ -32,6 +32,7 @@ private:
 	bool square;
 };
 
+//created by Sam - pushed/edited by Kurt
 void Matrix::multiplyWith(const Matrix& matrix2)
 {
 	if (rows == matrix2.cols && cols == matrix2.rows)
